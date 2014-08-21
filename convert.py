@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import ConfigParser
+from PIL import Image, ImageOps
+import shutil
 
 ## TODO: Implement these two
 # sliderb0.png (or whatever frame you like if there are more than one) -> slider-ball.png
@@ -103,7 +105,6 @@ def initoxml( inipath ):
     except IOError as e:
         print "Something went wrong! Are you sure the .ini is there?\n Exception: "+ e
 
-    # Anyone got a smarter way to do this? brain ain't functioning
     comboNames = [ "Combo1", "Combo2", "Combo3", "Combo4", "Combo5", "Combo6", "Combo7" ]
     comboArray = []
     colours = ""
@@ -150,4 +151,16 @@ def initoxml( inipath ):
     with open("theme.xml", "w") as theme_file:
         theme_file.write(theme)
 
-initoxml( "skin.ini" )
+def resizeImage ( imagefile ):
+
+    dest = "object-0.png"
+    im = Image.open(imagefile)
+    x = im.size[0]
+    y = im.size[1]
+    resized = (x * 75) / 100, (y * 75) / 100
+    #im.resize(resized) ## DOESNT RESIZE IT WHY YOU DO THIS :(
+    im = ImageOps.fit(im, resized, Image.ANTIALIAS)
+    im.save(dest)
+
+#initoxml( "skin.ini" )
+resizeImage( "default-0.png" )
