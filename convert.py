@@ -103,7 +103,23 @@ def initoxml( inipath ):
     except IOError as e:
         print "Something went wrong! Are you sure the .ini is there?\n Exception: "+ e
 
-    colours = "<color color=\"#FF8800\" />"
+    # Anyone got a smarter way to do this? brain ain't functioning
+    comboNames = [ "Combo1", "Combo2", "Combo3", "Combo4", "Combo5", "Combo6", "Combo7" ]
+    comboArray = []
+    colours = ""
+
+    try:
+        # get all combo colours
+        for combo in comboNames:
+            comboArray.append(ini.get("Colours", combo))
+    except:
+       pass
+
+    # populate the xml file with them
+    for combo in comboArray:
+        c = combo.split(',')
+        colours += '\t\t\t\t<color r="{color1}" g="{color2}" b="{color3}">\n'.format(color1 = c[0], color2 = c[1], color3 = c[2])
+
     sliderColorsTemp = ini.get("Colours", "SliderBorder")
     sliderColors = sliderColorsTemp.split(",")
 
@@ -120,8 +136,7 @@ def initoxml( inipath ):
         </cursor>
         <playfield>
             <set>
-                {colourSet}
-            </set>
+{colourSet}            </set>
             <slider>
                 {sliderSet}
             </slider>
