@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import ConfigParser
+
 ## TODO: Implement these two
 # sliderb0.png (or whatever frame you like if there are more than one) -> slider-ball.png
 # sliderb0@2x.png (or whatever frame you like if there are more than one) -> slider-ball@2x.png
@@ -93,3 +95,44 @@ namesHexis = [
   "warningarrow.png",
   "warningarrow@2x.png"
 ]
+
+def initoxml( inipath ):
+    ini = ConfigParser.RawConfigParser()
+    try:
+        ini.read(inipath)
+    except IOError as e:
+        print "Something went wrong! Are you sure the .ini is there?\n Exception: "+ e
+
+    colours = "<color color=\"#FF8800\" />"
+    sliderColorsTemp = ini.get("Colours", "SliderBorder")
+    sliderColors = sliderColorsTemp.split(",")
+
+    iniSliderBorder = "<border r=\"{sliderR}\" g=\"{sliderG}\" b=\"{sliderB}\" />".format(sliderR = sliderColors[0], sliderB = sliderColors[1], sliderG = sliderColors[2])
+    theme = '''<?xml version="1.0" encoding="UTF-8"?>
+<hexis>
+    <theme version="1.0">
+        <meta>
+            <name>{skinName}</name>
+            <creator>{skinAuthor}</creator>
+        </meta>
+        <cursor rotate="{cursorRotate}" expand="{cursorExpand}" color="#FFFFFF">
+            <trail length="0" color="#FFFFFF" opacity="50" />
+        </cursor>
+        <playfield>
+            <set>
+                {colourSet}
+            </set>
+            <slider>
+                {sliderSet}
+            </slider>
+            <font>
+                <combo prefix="{scoreFont}" kerning="{scoreKerning}" />
+                <score prefix="{scoreFont}" kerning="{scoreKerning}" />
+            </font>
+        </playfield>
+    </theme>
+</hexis>'''.format(skinName = ini.get("General", "Name"), skinAuthor = ini.get("General", "Author"), cursorRotate = ini.get("General", "CursorRotate"), cursorExpand = ini.get("General", "CursorExpand"), colourSet = colours, sliderSet = iniSliderBorder, scoreFont = ini.get("Fonts", "ScorePrefix"), scoreKerning = ini.get("Fonts", "ScoreOverlap"))
+    with open("theme.xml", "w") as theme_file:
+        theme_file.write(theme)
+
+initoxml( "skin.ini" )
