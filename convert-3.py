@@ -139,7 +139,7 @@ def iniToXML( inipath ):
     # populate the xml file with them
   for combo in comboArray:
     c = combo.split(',')
-    colours += '\t\t\t\t<color r="{color1}" g="{color2}" b="{color3}">\n'.format(color1 = c[0], color2 = c[1], color3 = c[2])
+    colours += '\t\t\t\t<color r="{color1}" g="{color2}" b="{color3}"></color>\n'.format(color1 = c[0], color2 = c[1], color3 = c[2])
 
   sliderColorsTemp = ini.get("Colours", "SliderBorder")
   sliderColors = sliderColorsTemp.split(",")
